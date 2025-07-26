@@ -5,13 +5,8 @@ import Sidebar from '../../components/admin/Sidebar'
 import { useAppContext } from '../../../context/AppContext'
 
 const Layout = () => {
-    const {axios,setToken,navigate}=useAppContext()
-    const logout=()=>{
-        localStorage.removeItem('token')
-        delete axios.defaults.headers.common['Authorization']
-        setToken(null)
-        navigate('/')
-    }
+    const {navigate,logout}=useAppContext()
+    
   return (
     <>
         <div className='flex items-center justify-between py-2 h-[70px] px-4 sm:px-12 border-b border-gray-200'>

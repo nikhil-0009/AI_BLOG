@@ -32,8 +32,9 @@ export const addBlog= async (req,res)=>{
         })
 
         const image=optimizedImageUrl
+        const userId = req.user._id;
         await Blog.create({
-            title,subTitle,description,category,image,isPublished
+            user: userId,title,subTitle,description,category,image,isPublished
         })
 
         res.json({success:true, message:"Blog added Sucessfully"})
@@ -90,15 +91,29 @@ export const togglePublish=async(req,res)=>{
     }
 }
 
-export const addComment=async(req,res)=>{
-    try {
-        const {name,blog,content}=req.body
-        await Comment.create({blog,name,content})
-        res.json({success:true,message:"comment added for review"})
-    } catch (error) {
-            res.json({success:false, message:error.message})
+export const addComment = async (req, res) => {
+  try {
+    const { blog, content } = req.body;
+    const userName = req.user.name;  // coming from auth middleware
+    const userId = req.user.id;     // from auth middleware
+    
+
+    if (!blog || !content) {
+      return res.status(400).json({ success: false, message: "Blog and content are required" });
     }
-}
+
+    await Comment.create({
+      blog,
+      user: userId,
+      name: userName, // Automatically from logged-in user
+      content,
+    });
+
+    res.json({ success: true, message: "Comment added for review" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
 
 export const getBlogComments=async(req,res)=>{
     try {

@@ -1,8 +1,12 @@
 import mongoose from "mongoose"
 
 const blogSchema=new mongoose.Schema({
+    user:{type:mongoose.Schema.Types.ObjectId,
+            ref:'user',
+            required:true
+        },
     title:{type:String,required:true},
-    subTtitle:{type:String},
+    subTitle:{type:String},
     description:{type:String,required:true},
     category:{type:String,required:true},
     image:{type:String,required:true},

@@ -8,7 +8,7 @@ import {parse} from 'marked'
 
 const AddBlog = () => {
 
-    const {axios}=useAppContext()
+    const {axios,currentUser}=useAppContext()
     const[isAdding,setIsAdding]=useState(false)
     const[loading,setLoading]=useState(false)
 
@@ -28,8 +28,9 @@ const AddBlog = () => {
           setIsAdding(true)  
           const blog={
             title,subTitle,description:quillRef.current.root.innerHTML,
-            category,isPublished
+            category,isPublished,user: currentUser?._id
           }
+          console.log(currentUser.id);
           const formData=new FormData()
           formData.append('blog',JSON.stringify(blog))
           formData.append('image',image)
