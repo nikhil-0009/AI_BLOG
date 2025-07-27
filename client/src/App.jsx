@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppContext } from "../context/AppContext";
 import UserLogin from "./components/user/UserLogin";
 import UserSignup from "./components/user/UserSignup";
-import UserDashboard from "./pages/user/userDashboard";
+import UserDashboard from "./pages/user/UserDashboard";
 import UserLayout from "./pages/user/UserLayout";
 import UserAddBlog from "./pages/user/UserAddBlog";
 import UserProfile from "./pages/user/UserProfile";
