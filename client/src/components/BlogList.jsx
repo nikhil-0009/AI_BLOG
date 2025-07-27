@@ -11,19 +11,17 @@ const BlogList = () => {
 
   // Re-fetch blogs if blogs array is empty
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const res = await axios.get("/api/blog/all");
-        setBlogs(res.data.blogs);
-      } catch (err) {
-        console.error("Failed to fetch blogs:", err);
-      }
-    };
-
-    if (blogs.length === 0) {
-      fetchBlogs();
+  const fetchBlogs = async () => {
+    try {
+      const res = await axios.get("/api/blog/all");
+      setBlogs(res.data.blogs);
+    } catch (err) {
+      console.error("Failed to fetch blogs:", err);
     }
-  }, [blogs, setBlogs]);
+  };
+
+  fetchBlogs(); // Always fetch
+}, [setBlogs]);
 
   const filteredBlogs = () => {
     if (input === "") return blogs;

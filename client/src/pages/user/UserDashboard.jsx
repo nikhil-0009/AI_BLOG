@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppContext } from '../../../context/AppContext';
+import BlogCard from '../../components/BlogCard';
 
 
 const UserDashboard = () => {
@@ -19,14 +20,11 @@ const UserDashboard = () => {
       {blogs.length === 0 ? (
         <p>No blogs found.</p>
       ) : (
-        <div className="grid gap-4">
-          {blogs.map((blog) => (
-            <div key={blog._id} className="border p-4 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
-              <p className="text-gray-700">{blog.content}</p>
-            </div>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 ">
+  {blogs.map((blog) => (
+    <BlogCard key={blog._id} blog={blog} />
+  ))}
+</div>
       )}
     </div>
   );

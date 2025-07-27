@@ -96,7 +96,7 @@ export const userLogin = async (req, res) => {
 
 export const userBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ createdBy: req.user.id }).sort({
+    const blogs = await Blog.find({ user: req.user.id }).sort({
       createdAt: -1,
     });
     res.status(200).json({ success: true, blogs });
@@ -107,7 +107,7 @@ export const userBlogs = async (req, res) => {
 
 export const userDetails = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password"); // fetch full details 
+    const user = await User.findById(req.user.id).select("-password"); // fetch full details 
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
   } catch (err) {
@@ -120,7 +120,7 @@ export const userStats = async (req, res) => {
     const { userId } = req.params;
 
     const blogsCount = await Blog.countDocuments({ user: userId });
-    const commentsCount = await Comment.countDocuments({ name: userId });
+    const commentsCount = await Comment.countDocuments({ user: userId });
 
     res.status(200).json({ blogsCount, commentsCount });
   } catch (error) {
