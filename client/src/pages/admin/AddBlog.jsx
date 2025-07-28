@@ -30,7 +30,6 @@ const AddBlog = () => {
             title,subTitle,description:quillRef.current.root.innerHTML,
             category,isPublished,user: currentUser?._id
           }
-          console.log(currentUser.id);
           const formData=new FormData()
           formData.append('blog',JSON.stringify(blog))
           formData.append('image',image)

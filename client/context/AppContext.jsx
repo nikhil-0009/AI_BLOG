@@ -82,7 +82,6 @@ useEffect(() => {
   const fetchCurrentUser = async () => {
     try {
       const res = await axios.get('/api/user/me');
-      console.log(res.data);
       setCurrentUser(res.data);
     } catch (err) {
       console.error('Error fetching currentUser:', err.response?.data || err.message);

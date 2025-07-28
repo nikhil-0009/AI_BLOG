@@ -20,7 +20,7 @@ const Blog = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        console.log(user);
+        
 
         const res = await axios.get("/api/user/me", {
           headers: {
@@ -56,34 +56,37 @@ const Blog = () => {
       toast.error(error.message);
     }
   };
-  const addComment = async (e) => {
-    e.preventDefault();
-    try {
-      console.log("Sending comment payload:", {
-        blog: id,
-        user: user._id,
-        name: user.name,
-        content,
-      });
-      const { data } = await axios.post("/api/blog/add-comment", {
-        blog: id,
-        user: user._id,
-        name: user.name,
-        content,
-      });
-      console.log(user.name);
-      console.log("Server response:", data);
-      if (data.success) {
-        toast.success(data.message);
-        setContent("");
-        fetchComments();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
+ const addComment = async (e) => {
+  e.preventDefault();
+
+  // Ensure user is logged in
+  if (!user || !user._id || !user.name) {
+    toast.error("You are not logged in");
+    return;
+  }
+
+  try {
+    const { data } = await axios.post("/api/blog/add-comment", {
+      blog: id,
+      user: user._id,
+      name: user.name,
+      content,
+    });
+
+    if (data.success) {
+      toast.success(data.message);
+      setContent("");
+      fetchComments();
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
+
+
+
 
   useEffect(() => {
     fetchBlogData();

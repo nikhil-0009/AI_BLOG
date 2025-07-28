@@ -30,7 +30,7 @@ const UserLogin = () => {
     }
   }
 
-  // ✅ Once login is complete and context updates, redirect
+  //  Once login is complete and context updates, redirect
   useEffect(() => {
     if (token && userRole === "user") {
       navigate("/user/dashboard")
@@ -77,7 +77,7 @@ const UserLogin = () => {
                 {loggingIn ? 'Logging in...' : 'Login'}
               </button>
             </form>
-            <div>New here? <Link to="/user/signup"><i>Signup</i></Link></div>
+            <div>New here? <Link to="/user/signup"><i className='text-primary'>Signup</i></Link></div>
           </div>
         </div>
       </div>

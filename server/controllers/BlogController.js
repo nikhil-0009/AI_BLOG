@@ -48,8 +48,6 @@ export const addBlog = async (req, res) => {
     if (req.user.role === "user") {
   blogData.user = req.user.id || req.user._id;
 }
-    console.log("Creating blog for user:", req.user);
-    console.log("blogData:", blogData);
     await Blog.create(blogData);
 
     res.json({ success: true, message: "Blog added Successfully" });
@@ -109,8 +107,6 @@ export const togglePublish=async(req,res)=>{
 
 export const addComment = async (req, res) => {
   try {
-    console.log("req.body in controller:", req.body);
-    console.log("req.user from auth middleware:", req.user);
 
     const { blog, content } = req.body;
 

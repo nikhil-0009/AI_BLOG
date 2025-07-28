@@ -3,7 +3,7 @@ import User from "../models/User.js"; // import User model
 
 const auth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log("Received auth header:", authHeader);
+  
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
