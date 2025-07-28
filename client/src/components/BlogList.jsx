@@ -3,42 +3,57 @@ import { blogCategories } from "../assets/assets";
 import { motion } from "motion/react";
 import BlogCard from "./BlogCard";
 import { useAppContext } from "../../context/AppContext";
-import axios from "axios"; // Needed for API call
+import axios from "axios";
+import ReactPaginate from "react-paginate";
 
 const BlogList = () => {
   const [menu, setMenu] = useState("All");
   const { blogs = [], setBlogs, input = "" } = useAppContext();
 
-  // Re-fetch blogs if blogs array is empty
+  const [currentPage, setCurrentPage] = useState(0);
+  const blogsPerPage = 8;
+
   useEffect(() => {
-  const fetchBlogs = async () => {
-    try {
-      const res = await axios.get("/api/blog/all");
-      setBlogs(res.data.blogs);
-    } catch (err) {
-      console.error("Failed to fetch blogs:", err);
-    }
-  };
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("/api/blog/all");
+        setBlogs(res.data.blogs);
+      } catch (err) {
+        console.error("Failed to fetch blogs:", err);
+      }
+    };
 
-  fetchBlogs(); // Always fetch
-}, [setBlogs]);
+    fetchBlogs();
+  }, [setBlogs]);
 
-  const filteredBlogs = () => {
-    if (input === "") return blogs;
-    return blogs.filter(
-      (blog) =>
+  const filteredBlogs = blogs.filter(
+    (blog) =>
+      (input === "" ||
         blog.title.toLowerCase().includes(input.toLowerCase()) ||
-        blog.category.toLowerCase().includes(input.toLowerCase())
-    );
+        blog.category.toLowerCase().includes(input.toLowerCase())) &&
+      (menu === "All" || blog.category === menu)
+  );
+
+  const pageCount = Math.ceil(filteredBlogs.length / blogsPerPage);
+  const start = currentPage * blogsPerPage;
+  const currentBlogs = filteredBlogs.slice(start, start + blogsPerPage);
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+    window.scrollTo(0, 0); // Scroll to top on page change
   };
 
   return (
     <div>
+      {/* Categories */}
       <div className="flex justify-center gap-4 sm:gap-8 my-10 relative">
         {blogCategories.map((item) => (
           <div key={item} className="relative">
             <button
-              onClick={() => setMenu(item)}
+              onClick={() => {
+                setMenu(item);
+                setCurrentPage(0); // Reset to first page on category change
+              }}
               className={`cursor-pointer text-gray-500 ${
                 menu === item && "text-white px-4 pt-0.5"
               }`}
@@ -56,13 +71,34 @@ const BlogList = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mx-8 sm:mx-16 xl:mx-40">
-        {filteredBlogs()
-          .filter((blog) => (menu === "All" ? true : blog.category === menu))
-          .map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
-          ))}
+      {/* Blogs Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mb-10 mx-8 sm:mx-16 xl:mx-40">
+        {currentBlogs.map((blog) => (
+          <BlogCard key={blog._id} blog={blog} />
+        ))}
       </div>
+
+      {/* Pagination Controls */}
+      {pageCount > 1 && (
+        <div className="flex justify-center mb-24">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="→"
+            previousLabel="←"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            marginPagesDisplayed={1}
+            pageCount={pageCount}
+            containerClassName="flex gap-2 text-white"
+            pageClassName="px-3 py-1 border rounded-md bg-gray-700 hover:bg-primary cursor-pointer"
+            activeClassName="bg-primary text-white"
+            previousClassName="px-3 py-1 border rounded-md bg-gray-700 cursor-pointer"
+            nextClassName="px-3 py-1 border rounded-md bg-gray-700 cursor-pointer"
+            disabledClassName="opacity-50 cursor-not-allowed"
+            forcePage={currentPage}
+          />
+        </div>
+      )}
     </div>
   );
 };
